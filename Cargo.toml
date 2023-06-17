@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 authors = ["John Nunley <jtnunley01@gmail.com>"]
 description = "Get a display handle instantly"
+license = "MIT OR Apache-2.0 OR Zlib"
+repository = "https://github.com/notgull/instant-display"
+readme = "README.md"
+keywords = ["display", "window", "handle", "instant"]
+categories = ["windowing"]
 
 [dependencies]
 cfg-if = "1.0.0"

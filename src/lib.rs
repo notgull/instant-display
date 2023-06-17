@@ -1,8 +1,16 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0 OR Zlib
 
 //! A simple type that allows you to get a display handle if you don't need a window.
+//! 
+//! This is useful for crates like [`glutin`], where a display handle can be feasibly used
+//! without an involved window handle.
+//! 
+//! [`glutin`]: https://crates.io/crates/glutin
+
+#![forbid(future_incompatible, rust_2018_idioms)]
 
 use raw_window_handle::{self as rwh, HasRawDisplayHandle, RawDisplayHandle};
+use std::fmt;
 
 /// The whole point.
 pub struct Display {
@@ -78,6 +86,14 @@ impl rwh::HasDisplayHandle for Display {
 #[derive(Debug)]
 pub struct Error(ErrorImpl);
 
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(self.0, f)
+    }
+}
+
+impl std::error::Error for Error {}
+
 #[cfg(all(
     unix,
     not(any(target_vendor = "apple", target_os = "android", target_os = "redox"))
@@ -109,3 +125,11 @@ use global_display::*;
     not(any(target_vendor = "apple", target_os = "android", target_os = "redox"))
 )))]
 type ErrorImpl = std::convert::Infallible;
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn smoke() {
+        super::Display::new().unwrap();
+    }
+}
